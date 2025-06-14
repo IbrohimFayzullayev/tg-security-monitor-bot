@@ -1,25 +1,21 @@
 require("dotenv").config();
 const TelegramBot = require("node-telegram-bot-api");
 
-// === 1. Botni ishga tushiramiz ===
 const token = process.env.TELEGRAM_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 
-// === 2. Foydalanuvchi uchun ko‘rinadigan “soxta” statistik model ===
 let state = {
   totalAttacks: 0,
   lastHourAttacks: 0,
   cpuLoad: 0,
-  topIps: [], // [{ip:"192.168.0.13", count:27}, ...]
+  topIps: [],
 };
 
-// Har 10 soniyada “hujumlar”ni yangilab turadigan taymer
 setInterval(() => {
-  const newHits = randInt(5, 30); // tasodifiy urinishlar
+  const newHits = randInt(5, 30);
   state.totalAttacks += newHits;
   state.lastHourAttacks += newHits;
 
-  // IP statistikasi ― 70 % holatda yangi IP, 30 % holatda mavjudini oshiramiz
   if (Math.random() < 0.7 || state.topIps.length === 0) {
     state.topIps.push({ ip: randomIp(), count: 1 });
   } else {
